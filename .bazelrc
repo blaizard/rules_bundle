@@ -1,0 +1,11 @@
+common --announce_rc
+
+try-import .bazelrc.local
+
+# Add timestamps
+common --show_timestamps
+
+# Global test specific options
+test --test_output=errors
+test --verbose_failures
+test --define=type=test

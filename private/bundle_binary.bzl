@@ -52,7 +52,17 @@ _bundle_binary_script = rule(
     executable = True,
 )
 
-def _bundle_binary_impl(name, visibility, compression, executable, bootstrap_script, args, **kwargs):
+def bundle_binary(name, executable, compression = True, bootstrap_script = ".bundle_binary_bootstrap", args = None, **kwargs):
+    """Bundle a binary and its runfiles into self contained file.
+    
+    Args:
+        name: The name of the rule.
+        executable: The executable target to bundle.
+        compression: Whether compression should be set or not.
+        bootstrap_script: Entry point of the executable.
+        args: List of arguments to be embedded in the bootstrap script.
+    """
+
     archive_name = "{}.tar.gz".format(name) if compression else "{}.tar".format(name)
     bundle_tar(
         name = "{}.bundle".format(name),
@@ -69,35 +79,6 @@ def _bundle_binary_impl(name, visibility, compression, executable, bootstrap_scr
         bootstrap_script = bootstrap_script,
         compression = compression,
         archive = archive_name,
-        visibility = visibility,
-        arguments = args,
+        arguments = args or [],
         **kwargs
     )
-
-bundle_binary = macro(
-    doc = "Bundle a binary and its runfiles into self contained file.",
-    implementation = _bundle_binary_impl,
-    inherit_attrs = _bundle_binary_script,
-    attrs = {
-        "archive": None,
-        "args": attr.string_list(
-            doc = "List of arguments to be embedded in the bootstrap script.",
-        ),
-        "arguments": None,
-        "bootstrap_script": attr.string(
-            doc = "Entry point of the executable.",
-            default = ".bundle_binary_bootstrap",
-        ),
-        "compression": attr.bool(
-            doc = "If the tarball is compressed or not.",
-            default = True,
-            configurable = False,
-        ),
-        "executable": attr.label(
-            cfg = "target",
-            executable = True,
-            doc = "The executable target to bundle.",
-            configurable = False,
-        ),
-    },
-)

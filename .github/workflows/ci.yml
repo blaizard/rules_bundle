@@ -10,6 +10,20 @@ jobs:
         steps:
             - uses: actions/checkout@v4
 
-            - name: "test"
+            - name: "test (current version)"
               run: |
+                  ./tools/bazel --version
                   ./tools/bazel test //...
+
+            - name: "test (bazel 8.x)"
+              run: |
+                  echo "8.0.0" > .bazelversion
+                  ./tools/bazel --version
+                  ./tools/bazel test //...
+
+            - name: "test (bazel 7.4.x)"
+              run: |
+                  echo "7.4.0" > .bazelversion
+                  ./tools/bazel --version
+                  ./tools/bazel test //... --test_tag_filters=-bazel-8
+

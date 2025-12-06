@@ -38,6 +38,7 @@ diff_test(
     name = "reproducible_tar",
     file1 = ":generated.tar",
     file2 = "expected.tar",
+    tags = ["bazel-8"],
 )
 
 bundle_tar(
@@ -53,6 +54,7 @@ diff_test(
     name = "reproducible_tar_gz",
     file1 = ":generated.tar.gz",
     file2 = "expected.tar.gz",
+    tags = ["bazel-8"],
 )
 
 bundle_binary(
@@ -64,6 +66,7 @@ diff_test(
     name = "reproducible_binary",
     file1 = ":binary",
     file2 = "expected_binary",
+    tags = ["bazel-8"],
 )
 
 genrule(
